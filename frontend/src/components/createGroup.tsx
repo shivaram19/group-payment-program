@@ -20,26 +20,53 @@ const CreateGroup = () => {
 
   const handleCreateGroup = async () => {
     try {
-      const provider = new AnchorProvider(connection, wallet!, { commitment: 'confirmed' });
-      const program = new Program(idl as unknown as Idl, "BhoPUdL4TWzUVgB3Mrrt16zdDmQNN8h1QACYxp8VVMaE", provider);
+      // Check if wallet is connected and valid
+      if (!wallet?.publicKey) {
+        setStatus('Wallet not connected');
+        return;
+      }
 
+      console.log('Initializing provider and program...');
+      const provider = new AnchorProvider(connection, wallet, { commitment: 'confirmed' });
+      const program = new Program(idl as unknown as Idl, "BhoPUdL4TWzUVgB3Mrrt16zdDmQNN8h1QACYxp8VVMaE", provider);
+      console.log('Program initialized');
+
+      // Ensure recipient is a valid public key
+      const recipientPubKey = new PublicKey(recipient);
+      const memberPubKeys = members.map((m) => new PublicKey(m));
+      console.log("hakuna")
+      // Validate title length or other business logic if necessary
+
+      // Find the program address for the group
       const [groupInfo] = await PublicKey.findProgramAddress(
-        [Buffer.from(title), new PublicKey(recipient).toBuffer()],
+        [Buffer.from(title), recipientPubKey.toBuffer()],
         program.programId
       );
+      console.log('Group Info PDA:', groupInfo.toString());
 
-      const tx = await program.methods.createGroup(title, new PublicKey(recipient), members.map(m => new PublicKey(m)))
+      // Make the transaction to create the group
+      console.log("mat")
+      // const tx = await 
+      console.log(program.methods) 
+      let tx
+      try {
+         tx = await program.methods
+        .createGroup(title, recipientPubKey, memberPubKeys)
         .accounts({
           groupInfo: groupInfo,
-          admin: wallet?.publicKey,
+          admin: wallet.publicKey,
           systemProgram: SystemProgram.programId,
         })
         .rpc();
-
+      } catch (error) {
+        console.log(error)
+      }
+        console.log("aata")
+      console.log('Transaction successful:', tx);
       setStatus(`Group created with transaction signature: ${tx}`);
-    } catch (err) {
-      console.error(err);
-      setStatus('Error creating group.');
+    } catch (err:any) {
+      console.error('Error creating group:', err);
+      setStatus(`Error creating group: ${err.message}`);
     }
   };
 
