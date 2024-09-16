@@ -12,7 +12,7 @@ const CreateGroup = () => {
   const [recipient, setRecipient] = useState('');
   const [members, setMembers] = useState([]);
   const [status, setStatus] = useState('');
-  const connection = new Connection("https://solana-devnet.g.alchemy.com/v2/2zKnK-ovBrxDHty5RlGixdU8InCAbNbI", 'confirmed');
+  const connection = new Connection("https://api.devnet.solana.com", 'confirmed');
 
   if (!connected) {
     return <div>Please connect your wallet.</div>;
@@ -21,7 +21,7 @@ const CreateGroup = () => {
   const handleCreateGroup = async () => {
     try {
       const provider = new AnchorProvider(connection, wallet!, { commitment: 'confirmed' });
-      const program = new Program(idl as unknown as Idl, process.env.REACT_APP_PROGRAM_ID!, provider);
+      const program = new Program(idl as unknown as Idl, "BhoPUdL4TWzUVgB3Mrrt16zdDmQNN8h1QACYxp8VVMaE", provider);
 
       const [groupInfo] = await PublicKey.findProgramAddress(
         [Buffer.from(title), new PublicKey(recipient).toBuffer()],

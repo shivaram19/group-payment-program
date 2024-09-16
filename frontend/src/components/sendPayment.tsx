@@ -5,6 +5,7 @@ import * as anchor from '@project-serum/anchor';
 import { Idl, Program, AnchorProvider } from '@project-serum/anchor';
 import idl from '../../../target/idl/group_payment.json'; 
 import dotenv from "dotenv"
+import { endpoint } from '../wallet/walletProvider';
 
 dotenv.config()
 const SendPayment = () => {
@@ -13,7 +14,7 @@ const SendPayment = () => {
   const [amount, setAmount] = useState('');
   const [groupInfo, setGroupInfo] = useState('');
   const [status, setStatus] = useState('');
-  const connection = new Connection("https://solana-devnet.g.alchemy.com/v2/2zKnK-ovBrxDHty5RlGixdU8InCAbNbI", 'confirmed');
+  const connection = new Connection(endpoint, 'confirmed');
   if (!connected) {
     return <div>Please connect your wallet.</div>;
   }
@@ -21,7 +22,7 @@ const SendPayment = () => {
   const handleSendPayment = async () => {
     try {
       const provider = new AnchorProvider( connection ,wallet!, { commitment: 'confirmed' });
-      const program = new Program(idl as unknown as Idl, process.env.REACT_APP_PROGRAM_ID!, provider);
+      const program = new Program(idl as unknown as Idl,"BhoPUdL4TWzUVgB3Mrrt16zdDmQNN8h1QACYxp8VVMaE", provider);
 
       const tx = await program.methods.sendPayment(new anchor.BN(amount))
         .accounts({
