@@ -1,0 +1,320 @@
+{
+  "address": "2VRzsVjWuUcgRDntsicF56XompNaQR5BehUSBfvPQaS6",
+  "metadata": {
+    "name": "group_payment",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "accept_group_invitation",
+      "discriminator": [
+        239,
+        220,
+        76,
+        18,
+        212,
+        126,
+        30,
+        159
+      ],
+      "accounts": [
+        {
+          "name": "group_info",
+          "writable": true
+        },
+        {
+          "name": "user_info",
+          "writable": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "allot_amount",
+      "discriminator": [
+        226,
+        217,
+        236,
+        37,
+        208,
+        105,
+        82,
+        233
+      ],
+      "accounts": [
+        {
+          "name": "group_info",
+          "writable": true
+        },
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "member_info",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "create_group",
+      "discriminator": [
+        79,
+        60,
+        158,
+        134,
+        61,
+        199,
+        56,
+        248
+      ],
+      "accounts": [
+        {
+          "name": "group_info",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "recipient",
+          "type": "pubkey"
+        },
+        {
+          "name": "members",
+          "type": {
+            "vec": "pubkey"
+          }
+        }
+      ]
+    },
+    {
+      "name": "create_user_info",
+      "discriminator": [
+        100,
+        8,
+        138,
+        146,
+        161,
+        210,
+        40,
+        212
+      ],
+      "accounts": [
+        {
+          "name": "user_info",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "username",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "send_payment",
+      "discriminator": [
+        122,
+        240,
+        182,
+        235,
+        54,
+        205,
+        12,
+        127
+      ],
+      "accounts": [
+        {
+          "name": "group_info",
+          "writable": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "member_info",
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "GroupInfo",
+      "discriminator": [
+        255,
+        247,
+        161,
+        251,
+        238,
+        54,
+        181,
+        136
+      ]
+    },
+    {
+      "name": "MemberInfo",
+      "discriminator": [
+        136,
+        12,
+        253,
+        251,
+        18,
+        27,
+        161,
+        167
+      ]
+    },
+    {
+      "name": "UserInfo",
+      "discriminator": [
+        83,
+        134,
+        200,
+        56,
+        144,
+        56,
+        10,
+        62
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "NotAMember",
+      "msg": "You are not a member of this group."
+    },
+    {
+      "code": 6001,
+      "name": "Unauthorized",
+      "msg": "You are not authorized to perform this action."
+    },
+    {
+      "code": 6002,
+      "name": "IncorrectAmount",
+      "msg": "The payment amount is incorrect."
+    },
+    {
+      "code": 6003,
+      "name": "NotAccepted",
+      "msg": "You have not accepted the group invitation."
+    }
+  ],
+  "types": [
+    {
+      "name": "GroupInfo",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "recipient",
+            "type": "pubkey"
+          },
+          {
+            "name": "members",
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "accepted_members",
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "active",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MemberInfo",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "allotted_amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "UserInfo",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "username",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ]
+}
