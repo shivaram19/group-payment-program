@@ -13,21 +13,20 @@ pub mod group_payment {
         Ok(())
     }
 
-        pub fn create_group(
-            ctx: Context<CreateGroup>,
-            title: String,
-            recipient: Pubkey, // Taking recipient as input
-            members: Vec<Pubkey>,
-        ) -> Result<()> {
-            let group_info = &mut ctx.accounts.group_info;
-            group_info.admin = ctx.accounts.admin.key();
-            group_info.title = title;
-            group_info.recipient = recipient;
-            group_info.members = members;
-            group_info.accepted_members = vec![]; // Initialize accepted_members to an empty Vec
-            group_info.active = true;
-            Ok(())
-        }
+    pub fn create_group(
+        ctx: Context<CreateGroup>,
+        title: String,
+        recipient: Pubkey, // Taking recipient as input
+        members: Vec<Pubkey>,
+    ) -> Result<()> {
+        let group_info = &mut ctx.accounts.group_info;
+        group_info.admin = ctx.accounts.admin.key();
+        group_info.title = title;
+        group_info.recipient = recipient;
+        group_info.members = members;
+        group_info.active = true;
+        Ok(())
+    }
 
     pub fn accept_group_invitation(ctx: Context<AcceptInvitation>) -> Result<()> {
         let group_info = &mut ctx.accounts.group_info;
@@ -38,9 +37,7 @@ pub mod group_payment {
         }
 
         // Logic to accept invitation
-        if !group_info.accepted_members.contains(&user_info.owner) {
-            group_info.accepted_members.push(user_info.owner);
-        }
+        group_info.accepted_members.push(user_info.owner);
         Ok(())
     }
 
@@ -98,7 +95,7 @@ pub struct CreateUserInfo<'info> {
 #[derive(Accounts)]
 #[instruction(title: String)]
 pub struct CreateGroup<'info> {
-    #[account(init, payer = admin, space = 8 + 160 + 4 + title.len() + 32 * 10)] // Adjusted space
+    #[account(init, payer = admin, space = 8 + 160 + title.len())]
     pub group_info: Account<'info, GroupInfo>,
     #[account(mut)]
     pub admin: Signer<'info>,
@@ -151,12 +148,11 @@ pub struct GroupInfo {
     pub active: bool,
 }
 
-#[account]  
+#[account]
 pub struct MemberInfo {
     pub owner: Pubkey,
     pub allotted_amount: u64,
 }
-
 
 // Errors
 #[error_code]
@@ -170,3 +166,4 @@ pub enum ErrorCode {
     #[msg("You have not accepted the group invitation.")]
     NotAccepted,
 }
+

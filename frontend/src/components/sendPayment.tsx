@@ -22,7 +22,7 @@ const SendPayment = () => {
   const handleSendPayment = async () => {
     try {
       const provider = new AnchorProvider( connection ,wallet!, { commitment: 'confirmed' });
-      const program = new Program(idl as unknown as Idl,"BhoPUdL4TWzUVgB3Mrrt16zdDmQNN8h1QACYxp8VVMaE", provider);
+      const program = new Program(idl as unknown as Idl,"2VRzsVjWuUcgRDntsicF56XompNaQR5BehUSBfvPQaS6", provider);
 
       const tx = await program.methods.sendPayment(new anchor.BN(amount))
         .accounts({

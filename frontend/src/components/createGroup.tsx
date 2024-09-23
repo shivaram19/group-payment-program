@@ -28,13 +28,14 @@ const CreateGroup = () => {
 
       console.log('Initializing provider and program...');
       const provider = new AnchorProvider(connection, wallet, { commitment: 'confirmed' });
-      const program = new Program(idl as unknown as Idl, "BhoPUdL4TWzUVgB3Mrrt16zdDmQNN8h1QACYxp8VVMaE", provider);
+      console.log('2')
+      const program = new Program(idl as unknown as Idl, "2VRzsVjWuUcgRDntsicF56XompNaQR5BehUSBfvPQaS6", provider);
       console.log('Program initialized');
 
       // Ensure recipient is a valid public key
       const recipientPubKey = new PublicKey(recipient);
       const memberPubKeys = members.map((m) => new PublicKey(m));
-      console.log("hakuna")
+
       // Validate title length or other business logic if necessary
 
       // Find the program address for the group
@@ -42,15 +43,9 @@ const CreateGroup = () => {
         [Buffer.from(title), recipientPubKey.toBuffer()],
         program.programId
       );
-      console.log('Group Info PDA:', groupInfo.toString());
+      console.log('Group Info PDA:', groupInfo.toString()); 
 
-      // Make the transaction to create the group
-      console.log("mat")
-      // const tx = await 
-      console.log(program.methods) 
-      let tx
-      try {
-         tx = await program.methods
+      const tx = await program.methods
         .createGroup(title, recipientPubKey, memberPubKeys)
         .accounts({
           groupInfo: groupInfo,
@@ -58,10 +53,6 @@ const CreateGroup = () => {
           systemProgram: SystemProgram.programId,
         })
         .rpc();
-      } catch (error) {
-        console.log(error)
-      }
-        console.log("aata")
       console.log('Transaction successful:', tx);
       setStatus(`Group created with transaction signature: ${tx}`);
     } catch (err:any) {

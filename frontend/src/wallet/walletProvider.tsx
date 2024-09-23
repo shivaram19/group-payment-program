@@ -6,7 +6,7 @@ interface childrenProps {
   children?: React.ReactNode;
 }
 
-export const endpoint = "https://solana-devnet.g.alchemy.com/v2/HWJHZamlTOsopXL8PpF2cD4MQCDYzmnQ"
+export const endpoint = "https://api.testnet.solana.com "
 const WalletProvider: FC<childrenProps> = ({ children }) => {
    // Or 'mainnet-beta' for mainnet
   //  const network = WalletAdapterNetwork.Devnet
